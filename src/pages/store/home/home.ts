@@ -10,7 +10,7 @@ const cargarCategorias = () => {
     categories.forEach((category) => {
         const li = document.createElement('li');
         li.innerHTML = `<a href="#">${category.nombre}</a>`;
-        li.classList.add("categorias");
+        li.classList.add("categories");
         categoriesList.appendChild(li);
     })
 
@@ -27,7 +27,7 @@ const cargarProductos = () => {
         const productsCard : HTMLElement = document.createElement("div");
         productsCard.classList.add("featured-products");
         productsCard.innerHTML =  `
-        <img src="${PRODUCTS.imagen}" alt="Imagen de ${PRODUCTS.nombre}" />
+        <img src="/images/${PRODUCTS.imagen}" alt="Imagen de ${PRODUCTS.nombre}" />
         <p class=product-category>${PRODUCTS.categorias.map(c => c.nombre)}</p>
         <h3 class=product-name>${PRODUCTS.nombre}</h3>
         <p class=product-description>${PRODUCTS.descripcion}</p>
