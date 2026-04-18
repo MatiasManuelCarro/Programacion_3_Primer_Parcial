@@ -1,16 +1,21 @@
 import type { Product } from "../../../types/product";
-import type { ICategory } from "../../../types/category";
-import { getCategories, getProducts, PRODUCTS } from "../../../data/data";
+// import type { ICategory } from "../../../types/category";
+import { getCategories, getProducts } from "../../../data/data";
+import { addCart} from "../../../utils/utils";
 
 const products = getProducts();
 const categories = getCategories();
+const productsContainer = document.getElementById("products-container") as HTMLDivElement;
+const cartMessage = document.getElementById("cart-message") as HTMLParagraphElement;
+const modal = document.getElementById("modal") as HTMLDivElement;
+const closeCart = document.getElementById("close-cart") as HTMLButtonElement;
+
 
 document.addEventListener("DOMContentLoaded", () => {
-
     loadProducts(products);
 });
 
-const cargarCategorias = () => {
+const loadCategories = () => {
     const categoriesList = document.getElementById("categories-list") as HTMLUListElement;
 
     const categories = getCategories();
@@ -22,7 +27,7 @@ const cargarCategorias = () => {
     })
 };
 
-cargarCategorias();
+loadCategories();
 
 //carga las tarjetas de productos
 const loadProducts = (products: Product[]) => {
@@ -79,19 +84,68 @@ const btnCategories = document.querySelectorAll<HTMLButtonElement>(".categories"
 
 btnCategories.forEach((btn) => {
     btn.addEventListener("click", () => {
+        //limpia el input de busqueda de texto primero
+        inputSearch.value = "";
         const selectedCategory = btn.textContent?.trim();
+        if (selectedCategory === "Ver todas las Categorias") {
+            loadProducts(products);
+        } else {
+            //busca categoria por nombre
+            const findCategory = categories.find(
+                (category) => category.nombre.toLowerCase() === selectedCategory?.toLowerCase()
+            );
 
-        //busca categoria por nombre
-        const findCategory = categories.find(
-            (category) => category.nombre.toLowerCase() === selectedCategory?.toLowerCase()
-        );
+            console.log("Categoria clickeada", findCategory)
+            // Filtrar los prodcutos por categoria
+            const filterProduct = products.filter((product) =>
+                product.categorias.some((c) => c.id === findCategory?.id)
+            );
 
-        console.log("Categoria clickeada", findCategory)
-        // Filtrar los prodcutos por categoria
-        const filterProduct = products.filter((product) =>
-            product.categorias.some((c) => c.id === findCategory?.id)
-        );
-
-        loadProducts(filterProduct);
+            loadProducts(filterProduct);
+        }
     });
 });
+
+
+
+
+//Evento de click en agregar al carrito (modal)
+productsContainer.addEventListener("click", (event: MouseEvent) => {
+    const target = event.target as HTMLElement | null;
+    if (target && target.classList.contains("btn-cart")) {
+        const idProduct = target.dataset.id;;
+        const product = products.find((p) => p.id === Number(idProduct));
+
+        if (product) {
+            cartMessage.textContent = `Se agrega al carrito: ${product.nombre}`;
+            modal.style.display = "block";      
+                addCart(product);    
+        }
+    }
+});
+
+// export const getCart = (): Product[] => {
+//   const data = localStorage.getItem("cart");
+//   return data ? JSON.parse(data) as Product[] : [];
+// };
+
+// const addCart = (p: Product) => {
+//     const cart= getCart();
+//     cart.push(p);  
+//     localStorage.setItem("cart", JSON.stringify(cart));
+//     console.log("Carrito actualizado:", cart);
+// }
+
+//funciones que cierran el modal del carrito
+closeCart.addEventListener("click", (event: MouseEvent) => {
+    event.preventDefault()
+    modal.style.display = "none";
+    cartMessage.textContent = "";
+    })
+
+window.onclick = function (event) {
+    if (event.target === modal) {
+        modal.style.display = "none";
+        cartMessage.textContent ="";
+    }
+}

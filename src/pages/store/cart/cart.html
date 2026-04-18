@@ -1,11 +1,51 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/style.css">
+    <title>Shopping Cart</title>
 </head>
+
 <body>
-    
+    <header class="site-header">
+        <a href="/index.html" class="site-header__brand">
+            <h1>&#127828; Food Store</h1>
+        </a>
+        <nav class="site-nav">
+            <ul class="site-nav__list">
+                <li class="site-nav__item"><a class="site-nav__link" href="/index.html">Home</a></li>
+                <li class="site-nav__item"><a class="site-nav__link" href="#">My Orders</a></li>
+                <li class="site-nav__item"><a class="site-nav__link" href="#">Admin Panel</a></li>
+                <li class="site-nav__item" id="login-button"><a class="site-nav__link" href="#">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+    <hr class="divider" />
+    <aside class="sidebar">
+        <ul id="sidebar-list" class="sidebar__list">
+            <li id="return-home" class="categories">
+                <a href="/index.html">Volver al inicio</a>
+            </li>
+        </ul>
+    </aside>
+    <main class="main">
+        <h2 class="products__heading">Shopping Cart</h2>
+        <section id="cart-container" class="products">
+        </section>
+        <div class="cart-summary">
+            <h3>Total: $1200</h3>
+            <button class="btn-cart" id="clear-cart">Limpiar Carrito</button>
+            <button class="btn-cart">Finalizar Compra</button>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <small class="site-footer__small">&reg; 2026 Food Store. All rights reserved. <br />Page
+            created by Matias Carro <br />matiasmanuelcarro@gmail.com
+        </small>
+    </footer>
+    <script type="module" src="/src/pages/store/cart/cart.ts"></script>
 </body>
+
 </html>
