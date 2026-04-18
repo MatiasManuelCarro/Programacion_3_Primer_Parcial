@@ -10,7 +10,7 @@
 
 <body>
     <header class="site-header">
-        <a href="index.html" class="site-header__brand">
+        <a href="/index.html" class="site-header__brand">
             <h1>&#127828; Food Store</h1>
         </a>
         <nav class="site-nav">
@@ -26,13 +26,15 @@
     <hr class="divider" />
     <aside class="sidebar">
         <h2 class="categories__heading">Categories</h2>
-        <ul id="categories-list" class="sidebar__list"></ul>
+        <ul id="categories-list" class="sidebar__list">
+        </ul>
     </aside>
     <main class="main">
-        <form class="search">
+        <form id = "searchForm"class="search">
             <label class="search__label" for="searchProduct">Search Products</label>
             <input id="searchProduct" class="search__input" type="text" placeholder="Search..." />
-            <button class="search__button" type="submit">Search</button>
+            <p id="searchNotification" class="search__notification">TEST</p>
+            <!-- <button class="search__button" type="submit">Search</button> -->
         </form>
 
         <h2 class="products__heading">Featured Products</h2>
