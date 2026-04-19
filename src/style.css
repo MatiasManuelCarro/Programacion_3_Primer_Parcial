@@ -541,7 +541,7 @@ main {
 
 /* Boton de volver al inicio */
 
-#return-home{
+#return-home {
     margin-top: 7.5rem;
 }
 
@@ -549,43 +549,74 @@ main {
 
 /* Contenedor del carrito */
 #cart-container {
-  display: flex;
-  flex-direction: column; /* uno debajo del otro */
-  gap: 10px;              /* espacio entre productos */
-  padding: 0;
-  margin: 0;
+    display: flex;
+    flex-direction: column;
+    /* uno debajo del otro */
+    gap: 10px;
+    /* espacio entre productos */
+    padding: 0;
+    margin: 0;
 }
 
 /* Cada producto */
 .cart-products {
-  display: flex;          /* todo en una sola línea */
-  align-items: center;    /* centra verticalmente */
-  border-bottom: 1px solid #ccc;
-  padding: 10px;
+    display: flex;
+    /* todo en una sola línea */
+    align-items: center;
+    /* centra verticalmente */
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
 }
 
 /* Imagen pequeña a la izquierda */
 .cart-img img {
-  width: 80px;
-  height: auto;
-  margin-right: 15px;
-  border-radius: 4px;
+    width: 80px;
+    height: auto;
+    margin-right: 15px;
+    border-radius: 4px;
 }
 
 /* Texto del producto */
 .cart-name {
-  font-size: 1.1rem;
-  margin: 0 10px 0 0;
-  flex: 1; /* ocupa espacio disponible */
+    font-size: 1.1rem;
+    margin: 0 10px 0 0;
+    flex: 1;
+    /* ocupa espacio disponible */
 }
 
 .cart-description {
-  color: #666;
-  margin: 0 10px;
-  flex: 2;
+    color: #666;
+    margin: 0 10px;
+    flex: 2;
 }
 
 .cart-price {
-  font-weight: bold;
-  margin-left: auto; /* empuja el precio a la derecha */
+    font-weight: bold;
+    margin-left: auto;
+}
+
+.cart-amount {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--color-texto);
+    min-width: 7rem;
+}
+
+.btn-amount {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    min-width: 1.5rem;
+    min-height: 1.5rem;
+
+    font-size: 1rem;
+    background-color: var(--color-primario);
+    border-radius: var(--border-radius);
+    transition: all 0.1s ease;
+    border: 1.5px solid var(--color-texto);
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
 }
