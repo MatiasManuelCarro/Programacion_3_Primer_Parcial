@@ -112,6 +112,12 @@ const loadCart = (cart: Record<number, number>) => {
         const plusLink = productCard.querySelector(".link-amount.plus") as HTMLAnchorElement;
         const deleteBtn = productCard.querySelector(".btn-cart.delete") as HTMLButtonElement;
 
+        //bloquea visualmente los botones de + al llegar al limit de stock
+        if (amount >= product.stock) {
+            plusLink.style.color = "var(--color-borde)";
+            plusLink.style.cursor = "not-allowed";
+        }
+
         minusLink.addEventListener("click", (e) => {
             e.preventDefault();
             //extrae el producto y la cantidad al momento
@@ -134,8 +140,8 @@ const loadCart = (cart: Record<number, number>) => {
             //la cantidad del carrito no puede ser mayor que el stock
             if (currentAmount < product.stock) {
                 updateCartQuantity(product.id, currentAmount + 1);
-                loadCart(getCart());
-            }
+                loadCart(getCart());}
+
         });
 
         deleteBtn.addEventListener("click", () => {
