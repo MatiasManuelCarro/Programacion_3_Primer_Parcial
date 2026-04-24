@@ -1,23 +1,64 @@
 import type { Product } from "../../../types/product";
 // import type { ICategory } from "../../../types/category";
 import { getCategories, getProducts } from "../../../data/data";
-import { addCart} from "../../../utils/utils";
+// import { addCart } from "../../../utils/utils";
+
+export const getCart = (): Record<number, number> => {
+    return JSON.parse(localStorage.getItem("cart") || "{}");
+};
+
+export const clearCart = () => {
+    localStorage.removeItem("cart");
+    console.log("DEBUG: Carrito eliminado de localStorage (clave 'cart' borrada)");
+};
+
+
+const addCart = (p: Product) => {
+    const cart = getCart();
+
+    let currentAmount: number;
+
+    // Si el producto ya existe en el carrito
+    if (cart[p.id] !== undefined) {
+        currentAmount = cart[p.id];
+        console.log(`DEBUG: Producto con id=${p.id} ya estaba en el carrito con cantidad=${currentAmount}`);
+    } else {
+        currentAmount = 0;
+        console.log(`DEBUG: Producto con id=${p.id} no estaba en el carrito, inicializando en cantidad=0`);
+    }
+
+    // Actualizamos la cantidad sumando 1
+    cart[p.id] = currentAmount + 1;
+    console.log(`DEBUG: Producto con id=${p.id} actualizado a cantidad=${cart[p.id]}`);
+
+    // Guardamos en localStorage
+    localStorage.setItem("cart", JSON.stringify(cart));
+    console.log("DEBUG: Carrito guardado en localStorage:", cart);
+};
+
 
 const products = getProducts();
 const categories = getCategories();
+
 const productsContainer = document.getElementById("products-container") as HTMLDivElement;
 const cartMessage = document.getElementById("cart-message") as HTMLParagraphElement;
 const modal = document.getElementById("modal") as HTMLDivElement;
 const closeCart = document.getElementById("close-cart") as HTMLButtonElement;
 
 
+// document.addEventListener("DOMContentLoaded", () => {
+//     loadProducts(products);
+// });
+
 document.addEventListener("DOMContentLoaded", () => {
-    loadProducts(products);
+    const container = document.getElementById("products-container");
+    if (container) { //evita que se cargue desde cart.html
+        loadProducts(products);
+    }
 });
 
 const loadCategories = () => {
-    const categoriesList = document.getElementById("categories-list") as HTMLUListElement;
-
+    const categoriesList = document.getElementById("categories-list") as HTMLUListElement;    
     const categories = getCategories();
     categories.forEach((category) => {
         const li = document.createElement('li');
@@ -27,7 +68,10 @@ const loadCategories = () => {
     })
 };
 
-loadCategories();
+//si no existe categories-list no llama la funcion, evita errores en cart.html
+if (document.getElementById("categories-list")) {
+    loadCategories();
+}
 
 //carga las tarjetas de productos
 const loadProducts = (products: Product[]) => {
@@ -35,6 +79,8 @@ const loadProducts = (products: Product[]) => {
     productsContainer.innerHTML = "";
 
     products.forEach((products) => {
+        //verifica que el stock sea mayor a 0
+        if (products.stock > 0){
         const productsCard: HTMLElement = document.createElement("div");
         productsCard.classList.add("featured-products");
         productsCard.innerHTML = `
@@ -48,7 +94,7 @@ const loadProducts = (products: Product[]) => {
         <button class=btn-details data-id="${products.id}">Ver Detalles</button>
         <button class=btn-cart data-id="${products.id}">Agregar al Carrito</button></div>
         `
-        productsContainer.appendChild(productsCard);
+        productsContainer.appendChild(productsCard);}
     });
 
 }
@@ -57,6 +103,7 @@ const loadProducts = (products: Product[]) => {
 const inputSearch = document.getElementById("searchProduct") as HTMLInputElement
 const searchNotification = document.getElementById("searchNotification") as HTMLElement;
 
+if (inputSearch && searchNotification) { //si no existen no se carga la busqueda, evita errores en cart.html
 inputSearch.addEventListener("input", (e) => {
     const target = e.target as HTMLInputElement;
     const search = target.value.toLowerCase();
@@ -76,8 +123,11 @@ inputSearch.addEventListener("input", (e) => {
         searchNotification.textContent = "No hay productos con ese nombre";
     }
 
-});
+});}
 
+
+//verifica que se encuentre dentro de home.html, si no no llama la funcion de modal, evita errores en cart.html
+if (window.location.pathname.endsWith("/home.html")) {
 
 //Filtrar por categorias
 const btnCategories = document.querySelectorAll<HTMLButtonElement>(".categories");
@@ -106,9 +156,6 @@ btnCategories.forEach((btn) => {
     });
 });
 
-
-
-
 //Evento de click en agregar al carrito (modal)
 productsContainer.addEventListener("click", (event: MouseEvent) => {
     const target = event.target as HTMLElement | null;
@@ -118,34 +165,24 @@ productsContainer.addEventListener("click", (event: MouseEvent) => {
 
         if (product) {
             cartMessage.textContent = `Se agrega al carrito: ${product.nombre}`;
-            modal.style.display = "block";      
-                addCart(product);    
+            modal.style.display = "block";
+            addCart(product);
         }
     }
 });
-
-// export const getCart = (): Product[] => {
-//   const data = localStorage.getItem("cart");
-//   return data ? JSON.parse(data) as Product[] : [];
-// };
-
-// const addCart = (p: Product) => {
-//     const cart= getCart();
-//     cart.push(p);  
-//     localStorage.setItem("cart", JSON.stringify(cart));
-//     console.log("Carrito actualizado:", cart);
-// }
 
 //funciones que cierran el modal del carrito
 closeCart.addEventListener("click", (event: MouseEvent) => {
     event.preventDefault()
     modal.style.display = "none";
     cartMessage.textContent = "";
-    })
+})
 
 window.onclick = function (event) {
     if (event.target === modal) {
         modal.style.display = "none";
-        cartMessage.textContent ="";
+        cartMessage.textContent = "";
     }
+}
+
 }

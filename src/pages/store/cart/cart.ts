@@ -1,17 +1,28 @@
 import type { Product } from "../../../types/product";
-import { getCart, clearCart } from "../../../utils/utils";
+import { getCart, clearCart } from "../home/home";
 import { getProducts } from "../../../data/data";
 
 //listener botones + y - 
 
 //botones + y -
+// export const updateCartQuantity = (id: number, newAmount: number) => {
+//     const cart = getCart();
+//     if (newAmount <= 0) {
+//         delete cart[id]; // si llega a 0 se elimina
+//         cart[id] = newAmount;
+//     }
+//     localStorage.setItem("cart", JSON.stringify(cart));
+// };
+
 export const updateCartQuantity = (id: number, newAmount: number) => {
     const cart = getCart();
-    if (newAmount <= 0) {
-        delete cart[id]; // si llega a 0, lo eliminamos
+
+    if (newAmount < 1) {
+        cart[id] = 1; //minimo de 1 
     } else {
         cart[id] = newAmount;
     }
+
     localStorage.setItem("cart", JSON.stringify(cart));
 };
 
@@ -100,8 +111,16 @@ const loadCart = (cart: Record<number, number>) => {
         });
 
         plusBtn.addEventListener("click", () => {
-            updateCartQuantity(product.id, amount + 1);
-            loadCart(getCart());
+            //extrae el producto y la cantidad al momento
+            const currentCart = getCart();
+            const currentAmount = currentCart[product.id] ?? 0;
+            console.log("Debug cantidad", currentAmount, "stock:", product.stock);
+
+            //la cantidad del carrito no puede ser mayor que el stock
+            if (currentAmount < product.stock) {
+                updateCartQuantity(product.id, currentAmount + 1);
+                loadCart(getCart());
+            }
         });
 
         deleteBtn.addEventListener("click", () => {
