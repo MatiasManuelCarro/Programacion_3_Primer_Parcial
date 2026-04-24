@@ -62,32 +62,36 @@ const updateCartBadge = () => {
 
             //animacion del badge
             cartCountElement.animate(
-        [
-            { transform: "scale(1)" },
-            { transform: "scale(1.2)" },
-            { transform: "scale(1)" }
-        ],
-        {
-            duration: 400,
-            easing: "ease"
-        }
-    );
+                [
+                    { transform: "scale(1)" },
+                    { transform: "scale(1.2)" },
+                    { transform: "scale(1)" }
+                ],
+                {
+                    duration: 400,
+                    easing: "ease"
+                }
+            );
         }
     }
 };
 
 
 
-
-
-const products = getProducts();
-const categories = getCategories();
-
 const productsContainer = document.getElementById("products-container") as HTMLDivElement;
 const cartMessage = document.getElementById("cart-message") as HTMLParagraphElement;
 const modalImg = document.getElementById("modal-img") as HTMLDivElement;
 const modal = document.getElementById("modal") as HTMLDivElement;
 const closeCart = document.getElementById("close-cart") as HTMLButtonElement;
+const productsHeading = document.getElementById("products-heading") as HTMLParagraphElement;
+//busqueda por nombre 
+const inputSearch = document.getElementById("searchProduct") as HTMLInputElement
+const searchNotification = document.getElementById("searchNotification") as HTMLElement;
+
+const products = getProducts();
+const categories = getCategories();
+
+
 
 
 // document.addEventListener("DOMContentLoaded", () => {
@@ -124,9 +128,13 @@ const loadProducts = (products: Product[]) => {
     const productsContainer = document.getElementById("products-container") as HTMLDivElement;
     productsContainer.innerHTML = "";
 
+    //contador de productos disponibles
+    let productsAvailable = 0;
+
     products.forEach((products) => {
         //verifica que el stock sea mayor a 0
         if (products.stock > 0) {
+            productsAvailable += 1;
             const productsCard: HTMLElement = document.createElement("div");
             productsCard.classList.add("featured-products");
             productsCard.innerHTML = `
@@ -143,11 +151,13 @@ const loadProducts = (products: Product[]) => {
         }
     });
 
+    //informa la cantidad de productos total debajo de la busqueda
+    searchNotification.style.display = "block";
+    searchNotification.textContent = `Hay disponible ${productsAvailable} productos`;
+
 }
 
-//busqueda por nombre 
-const inputSearch = document.getElementById("searchProduct") as HTMLInputElement
-const searchNotification = document.getElementById("searchNotification") as HTMLElement;
+
 
 if (inputSearch && searchNotification) { //si no existen no se carga la busqueda, evita errores en cart.html
     inputSearch.addEventListener("input", (e) => {
@@ -161,12 +171,18 @@ if (inputSearch && searchNotification) { //si no existen no se carga la busqueda
 
         //Muestra u oculta el contador de producos encontrados
         if (search === "") {
-            searchNotification.style.display = "none";
+            searchNotification.style.display = "block";
+            //se reinicia el texto del titulo (categorias) a productos.
+            productsHeading.textContent = `Productos`
         } else if (searchResults.length > 0) {
             searchNotification.style.display = "block";
             searchNotification.textContent = `Se encontraron ${searchResults.length} productos`;
+            //se reinicia el texto del titulo (categorias) a productos.
+            productsHeading.textContent = `Productos`
         } else {
             searchNotification.textContent = "No hay productos con ese nombre";
+            //se reinicia el texto del titulo (categorias) a productos.
+            productsHeading.textContent = `Productos`
         }
 
     });
@@ -174,7 +190,7 @@ if (inputSearch && searchNotification) { //si no existen no se carga la busqueda
 
 
 //verifica que se encuentre dentro de home.html, si no no llama la funcion de modal, evita errores en cart.html
-if (window.location.pathname.endsWith("/home.html")) {
+if (window.location.pathname.includes("home.html")) {
 
     //Filtrar por categorias
     const btnCategories = document.querySelectorAll<HTMLButtonElement>(".categories");
@@ -186,6 +202,7 @@ if (window.location.pathname.endsWith("/home.html")) {
             const selectedCategory = btn.textContent?.trim();
             if (selectedCategory === "Ver todas las Categorias") {
                 loadProducts(products);
+                productsHeading.textContent = `Productos`
             } else {
                 //busca categoria por nombre
                 const findCategory = categories.find(
@@ -199,7 +216,9 @@ if (window.location.pathname.endsWith("/home.html")) {
                 );
 
                 loadProducts(filterProduct);
+                productsHeading.textContent = `Categoria: ${selectedCategory}`
             }
+
         });
     });
 
@@ -217,7 +236,7 @@ if (window.location.pathname.endsWith("/home.html")) {
                 //agrega al carrito
                 addCart(product);
                 //actualiza el badge del cart
-                updateCartBadge();                
+                updateCartBadge();
             }
         }
     });
