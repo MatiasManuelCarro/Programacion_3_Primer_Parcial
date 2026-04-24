@@ -36,6 +36,36 @@ const addCart = (p: Product) => {
     console.log("DEBUG: Carrito guardado en localStorage:", cart);
 };
 
+//cantidad de elementos en el carrito
+export const getCartCount = (): number => {
+    const cart = getCart();
+    let count = 0;
+
+    for (const amount of Object.values(cart)) {
+        count += amount;
+    }
+
+    return count;
+};
+
+//bagde de cantidad de items en el carrito
+const updateCartBadge = () => {
+    const cartCountElement = document.getElementById("cart-count");
+    if (cartCountElement) {
+        const count = getCartCount();
+        cartCountElement.textContent = String(count);
+
+        if (count === 0) {
+            cartCountElement.style.visibility = "hidden";
+        } else {
+            cartCountElement.style.visibility = "visible";
+        }
+    }
+};
+
+
+
+
 
 const products = getProducts();
 const categories = getCategories();
@@ -50,15 +80,17 @@ const closeCart = document.getElementById("close-cart") as HTMLButtonElement;
 //     loadProducts(products);
 // });
 
+//funciones que se deben ejecutar al cargar home 
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById("products-container");
     if (container) { //evita que se cargue desde cart.html
         loadProducts(products);
+        updateCartBadge();
     }
 });
 
 const loadCategories = () => {
-    const categoriesList = document.getElementById("categories-list") as HTMLUListElement;    
+    const categoriesList = document.getElementById("categories-list") as HTMLUListElement;
     const categories = getCategories();
     categories.forEach((category) => {
         const li = document.createElement('li');
@@ -80,10 +112,10 @@ const loadProducts = (products: Product[]) => {
 
     products.forEach((products) => {
         //verifica que el stock sea mayor a 0
-        if (products.stock > 0){
-        const productsCard: HTMLElement = document.createElement("div");
-        productsCard.classList.add("featured-products");
-        productsCard.innerHTML = `
+        if (products.stock > 0) {
+            const productsCard: HTMLElement = document.createElement("div");
+            productsCard.classList.add("featured-products");
+            productsCard.innerHTML = `
         <div class="featured-img">
         <img src="/images/${products.imagen}" alt="Imagen de ${products.nombre}" /></div>
         <p class=product-category>${products.categorias.map(c => c.nombre)}</p>
@@ -91,10 +123,10 @@ const loadProducts = (products: Product[]) => {
         <p class=product-description>${products.descripcion}</p>
         <p class=product-price>Precio: $${products.precio}</p>
         <div class="buttons">
-        <button class=btn-details data-id="${products.id}">Ver Detalles</button>
         <button class=btn-cart data-id="${products.id}">Agregar al Carrito</button></div>
         `
-        productsContainer.appendChild(productsCard);}
+            productsContainer.appendChild(productsCard);
+        }
     });
 
 }
@@ -104,85 +136,89 @@ const inputSearch = document.getElementById("searchProduct") as HTMLInputElement
 const searchNotification = document.getElementById("searchNotification") as HTMLElement;
 
 if (inputSearch && searchNotification) { //si no existen no se carga la busqueda, evita errores en cart.html
-inputSearch.addEventListener("input", (e) => {
-    const target = e.target as HTMLInputElement;
-    const search = target.value.toLowerCase();
+    inputSearch.addEventListener("input", (e) => {
+        const target = e.target as HTMLInputElement;
+        const search = target.value.toLowerCase();
 
-    const searchResults = products.filter((product) => {
-        return product.nombre.toLowerCase().includes(search);
+        const searchResults = products.filter((product) => {
+            return product.nombre.toLowerCase().includes(search);
+        });
+        loadProducts(searchResults);
+
+        //Muestra u oculta el contador de producos encontrados
+        if (search === "") {
+            searchNotification.style.display = "none";
+        } else if (searchResults.length > 0) {
+            searchNotification.style.display = "block";
+            searchNotification.textContent = `Se encontraron ${searchResults.length} productos`;
+        } else {
+            searchNotification.textContent = "No hay productos con ese nombre";
+        }
+
     });
-    loadProducts(searchResults);
-
-    //Muestra u oculta el contador de producos encontrados
-    if (search === "") {
-        searchNotification.style.display = "none";
-    } else if (searchResults.length > 0) {
-        searchNotification.style.display = "block";
-        searchNotification.textContent = `Se encontraron ${searchResults.length} productos`;
-    } else {
-        searchNotification.textContent = "No hay productos con ese nombre";
-    }
-
-});}
+}
 
 
 //verifica que se encuentre dentro de home.html, si no no llama la funcion de modal, evita errores en cart.html
 if (window.location.pathname.endsWith("/home.html")) {
 
-//Filtrar por categorias
-const btnCategories = document.querySelectorAll<HTMLButtonElement>(".categories");
+    //Filtrar por categorias
+    const btnCategories = document.querySelectorAll<HTMLButtonElement>(".categories");
 
-btnCategories.forEach((btn) => {
-    btn.addEventListener("click", () => {
-        //limpia el input de busqueda de texto primero
-        inputSearch.value = "";
-        const selectedCategory = btn.textContent?.trim();
-        if (selectedCategory === "Ver todas las Categorias") {
-            loadProducts(products);
-        } else {
-            //busca categoria por nombre
-            const findCategory = categories.find(
-                (category) => category.nombre.toLowerCase() === selectedCategory?.toLowerCase()
-            );
+    btnCategories.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            //limpia el input de busqueda de texto primero
+            inputSearch.value = "";
+            const selectedCategory = btn.textContent?.trim();
+            if (selectedCategory === "Ver todas las Categorias") {
+                loadProducts(products);
+            } else {
+                //busca categoria por nombre
+                const findCategory = categories.find(
+                    (category) => category.nombre.toLowerCase() === selectedCategory?.toLowerCase()
+                );
 
-            console.log("Categoria clickeada", findCategory)
-            // Filtrar los prodcutos por categoria
-            const filterProduct = products.filter((product) =>
-                product.categorias.some((c) => c.id === findCategory?.id)
-            );
+                console.log("Categoria clickeada", findCategory)
+                // Filtrar los prodcutos por categoria
+                const filterProduct = products.filter((product) =>
+                    product.categorias.some((c) => c.id === findCategory?.id)
+                );
 
-            loadProducts(filterProduct);
+                loadProducts(filterProduct);
+            }
+        });
+    });
+
+    //Evento de click en agregar al carrito (modal)
+    productsContainer.addEventListener("click", (event: MouseEvent) => {
+        const target = event.target as HTMLElement | null;
+        if (target && target.classList.contains("btn-cart")) {
+            const idProduct = target.dataset.id;;
+            const product = products.find((p) => p.id === Number(idProduct));
+
+            if (product) {
+                cartMessage.textContent = `Se agrega al carrito: ${product.nombre}`;
+                modal.style.display = "block";
+                //agrega al carrito
+                addCart(product);
+                //actualiza el badge del cart
+                updateCartBadge();
+            }
         }
     });
-});
 
-//Evento de click en agregar al carrito (modal)
-productsContainer.addEventListener("click", (event: MouseEvent) => {
-    const target = event.target as HTMLElement | null;
-    if (target && target.classList.contains("btn-cart")) {
-        const idProduct = target.dataset.id;;
-        const product = products.find((p) => p.id === Number(idProduct));
-
-        if (product) {
-            cartMessage.textContent = `Se agrega al carrito: ${product.nombre}`;
-            modal.style.display = "block";
-            addCart(product);
-        }
-    }
-});
-
-//funciones que cierran el modal del carrito
-closeCart.addEventListener("click", (event: MouseEvent) => {
-    event.preventDefault()
-    modal.style.display = "none";
-    cartMessage.textContent = "";
-})
-
-window.onclick = function (event) {
-    if (event.target === modal) {
+    //funciones que cierran el modal del carrito
+    closeCart.addEventListener("click", (event: MouseEvent) => {
+        event.preventDefault()
         modal.style.display = "none";
         cartMessage.textContent = "";
+    })
+
+    window.onclick = function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+            cartMessage.textContent = "";
+        }
     }
-}
 
 }

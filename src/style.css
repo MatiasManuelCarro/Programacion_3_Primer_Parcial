@@ -75,6 +75,24 @@ main {
     padding-right: 5rem;
 }
 
+.cart-badge {
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+    font-weight: bold;
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    margin-left: 0.3rem;
+    visibility: hidden;
+
+    /* oculto por defecto */
+}
+
+
 #login-button {
     display: flex;
     align-items: center;
@@ -96,6 +114,8 @@ main {
 
 #login-button:hover .site-nav__link {
     color: var(--color-blanco);
+    display: inline-flex;
+    align-items: center;
 }
 
 #login-button:active {
@@ -111,7 +131,8 @@ main {
 
 /* links main header */
 .site-nav__link {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     text-decoration: none;
     color: var(--color-texto);
     font-size: 1.2rem;
@@ -133,9 +154,9 @@ main {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    height: calc(100vh - 5.65rem);
+    height: calc(100vh - 5rem);
     position: sticky;
-    top: 5.65rem;
+    top: 5rem;
     width: fit-content;
     background-color: var(--color-blanco);
     box-shadow: 4px 0 6px var(--color-borde-tenue);
@@ -358,8 +379,9 @@ main {
 
 .btn-cart {
     flex: 1;
-    margin-right: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -498,8 +520,9 @@ main {
     border-radius: var(--border-radius);
     box-shadow: 0 4px 8px var(--color-borde-tenue);
     padding: 1.5rem;
-    margin: 2rem;
+    margin: 2rem auto;
     text-align: center;
+    width: 50%;
 }
 
 .cart-summary h3 {
@@ -509,8 +532,9 @@ main {
 }
 
 .cart-summary .btn-cart {
-    width: 100%;
-    justify-content: center;
+    width: 75%;
+    display: block;
+    margin: 0.5rem auto;
 }
 
 .btn-cart-link {
@@ -561,17 +585,23 @@ main {
 /* Cada producto */
 .cart-products {
     display: flex;
-    /* todo en una sola línea */
     align-items: center;
-    /* centra verticalmente */
     border-bottom: 1px solid #ccc;
-    padding: 10px;
+    padding: 0.625rem;
+    background-color: var(--color-blanco);
+    border: 1px solid var(--color-borde-tenue);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px var(--color-borde-tenue);
+    margin-left: 1rem;
+    margin-right: 1rem;
 }
+
 
 /* Imagen pequeña a la izquierda */
 .cart-img img {
-    width: 80px;
-    height: auto;
+    width: 5rem;
+    height: 5rem;
+    object-fit: cover;
     margin-right: 15px;
     border-radius: 4px;
 }
@@ -581,6 +611,7 @@ main {
     font-size: 1.1rem;
     margin: 0 10px 0 0;
     flex: 1;
+    padding-left: 1rem;
     /* ocupa espacio disponible */
 }
 
@@ -593,15 +624,84 @@ main {
 .cart-price {
     font-weight: bold;
     margin-left: auto;
+    margin-right: 2rem;
+    width: 7rem;
 }
 
 .cart-amount {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     border: 1px solid var(--color-texto);
-    min-width: 7rem;
+    width: 12rem;
+    margin-right: 2rem;
 }
 
+.cart-subtotal {
+    margin-right: 1rem;
+    width: 12rem;
+}
+
+.link-amount {
+    font-size: 1.3rem;
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.5rem 0.8em 0.5rem 0.8rem;
+    transition: background-color 0.2s ease;
+}
+
+.link-amount:hover {
+    /* size: ; */
+}
+
+.cart-summary .btn-disabled {
+    width: 75%;
+    display: block;
+    margin: 0.5rem auto;
+}
+
+.btn-disabled {
+    background-color: #ccc;
+    /* grisado */
+    color: #666;
+    /* texto apagado */
+    border: 1.5px solid #aaa;
+    /* borde tenue */
+    cursor: not-allowed;
+    /* cursor bloqueado */
+    opacity: 0.7;
+    /* efecto visual */
+    pointer-events: none;
+    /* evita clicks */
+    flex: 1;
+    /* respeta tamaño base */
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: var(--border-radius);
+    transition: all 0.1s ease;
+}
+
+#text-disabled {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--color-texto);
+    text-align: center;
+    padding: 0.5rem 1rem;
+
+}
+
+
+/* Botones viejos de cantidad */
+/* 
 .btn-amount {
     display: flex;
     align-items: center;
@@ -619,4 +719,4 @@ main {
     margin-right: 0.5rem;
     margin-bottom: 0.5rem;
     cursor: pointer;
-}
+} */

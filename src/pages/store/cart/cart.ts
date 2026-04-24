@@ -17,8 +17,8 @@ import { getProducts } from "../../../data/data";
 export const updateCartQuantity = (id: number, newAmount: number) => {
     const cart = getCart();
 
-    if (newAmount < 1) {
-        cart[id] = 1; //minimo de 1 
+    if (newAmount <= 0) {
+        delete cart[id]; //en 0 se elimina 
     } else {
         cart[id] = newAmount;
     }
@@ -61,6 +61,11 @@ export const updateCartQuantity = (id: number, newAmount: number) => {
 // });
 
 
+//botones eliminados:
+// <button class="btn-amount minus" data-id="${product.id}">-</button>
+// <p class="cart-amount">Cantidad: ${amount}</p>
+// <button class="btn-amount plus" data-id="${product.id}">+</button>
+
 const loadCart = (cart: Record<number, number>) => {
     const cartContainer = document.getElementById("cart-container") as HTMLDivElement;
     cartContainer.innerHTML = "";
@@ -87,9 +92,11 @@ const loadCart = (cart: Record<number, number>) => {
         <h3 class="cart-name">${product.nombre}</h3>
         <p class="cart-description">${product.descripcion}</p>
         <p class="cart-price">Precio: $${product.precio}</p>
-        <button class="btn-amount minus" data-id="${product.id}">-</button>
-        <p class="cart-amount">Cantidad: ${amount}</p>
-        <button class="btn-amount plus" data-id="${product.id}">+</button>
+        <p class="cart-amount">
+        <a href="#" class="link-amount minus" data-id="${product.id}">-</a>
+        Cantidad: ${amount}
+        <a href="#" class="link-amount plus" data-id="${product.id}">+</a>
+        </p>
         <p class="cart-subtotal">Subtotal: $${subTotal}</p>
         <div class="buttons">
         <button class="btn-cart delete" data-id="${product.id}">Eliminar</button>
@@ -101,19 +108,27 @@ const loadCart = (cart: Record<number, number>) => {
 
         //listeners para los botones + y - 
 
-        const minusBtn = productCard.querySelector(".btn-amount.minus") as HTMLButtonElement;
-        const plusBtn = productCard.querySelector(".btn-amount.plus") as HTMLButtonElement;
+        const minusLink = productCard.querySelector(".link-amount.minus") as HTMLAnchorElement;
+        const plusLink = productCard.querySelector(".link-amount.plus") as HTMLAnchorElement;
         const deleteBtn = productCard.querySelector(".btn-cart.delete") as HTMLButtonElement;
 
-        minusBtn.addEventListener("click", () => {
-            updateCartQuantity(product.id, amount - 1);
-            loadCart(getCart());
-        });
-
-        plusBtn.addEventListener("click", () => {
+        minusLink.addEventListener("click", (e) => {
+            e.preventDefault();
             //extrae el producto y la cantidad al momento
             const currentCart = getCart();
-            const currentAmount = currentCart[product.id] ?? 0;
+            const currentAmount = currentCart[product.id];
+            //la cantidad no puede ser menor a 1
+            if (currentAmount > 1) {
+                updateCartQuantity(product.id, amount - 1);
+                loadCart(getCart());
+            }
+        });
+
+        plusLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            //extrae el producto y la cantidad al momento
+            const currentCart = getCart();
+            const currentAmount = currentCart[product.id];
             console.log("Debug cantidad", currentAmount, "stock:", product.stock);
 
             //la cantidad del carrito no puede ser mayor que el stock
