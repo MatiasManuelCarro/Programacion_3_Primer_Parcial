@@ -59,6 +59,19 @@ const updateCartBadge = () => {
             cartCountElement.style.visibility = "hidden";
         } else {
             cartCountElement.style.visibility = "visible";
+
+            //animacion del badge
+            cartCountElement.animate(
+        [
+            { transform: "scale(1)" },
+            { transform: "scale(1.2)" },
+            { transform: "scale(1)" }
+        ],
+        {
+            duration: 400,
+            easing: "ease"
+        }
+    );
         }
     }
 };
@@ -72,6 +85,7 @@ const categories = getCategories();
 
 const productsContainer = document.getElementById("products-container") as HTMLDivElement;
 const cartMessage = document.getElementById("cart-message") as HTMLParagraphElement;
+const modalImg = document.getElementById("modal-img") as HTMLDivElement;
 const modal = document.getElementById("modal") as HTMLDivElement;
 const closeCart = document.getElementById("close-cart") as HTMLButtonElement;
 
@@ -191,18 +205,19 @@ if (window.location.pathname.endsWith("/home.html")) {
 
     //Evento de click en agregar al carrito (modal)
     productsContainer.addEventListener("click", (event: MouseEvent) => {
-        const target = event.target as HTMLElement | null;
+        const target = event.target as HTMLElement;
         if (target && target.classList.contains("btn-cart")) {
             const idProduct = target.dataset.id;;
             const product = products.find((p) => p.id === Number(idProduct));
 
             if (product) {
+                modalImg.innerHTML = `<img src="/images/${product.imagen}" alt="Imagen de ${product.nombre}"/>`
                 cartMessage.textContent = `Se agrega al carrito: ${product.nombre}`;
                 modal.style.display = "block";
                 //agrega al carrito
                 addCart(product);
                 //actualiza el badge del cart
-                updateCartBadge();
+                updateCartBadge();                
             }
         }
     });

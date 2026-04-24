@@ -115,7 +115,10 @@ const loadCart = (cart: Record<number, number>) => {
         //bloquea visualmente los botones de + al llegar al limit de stock
         if (amount >= product.stock) {
             plusLink.style.color = "var(--color-borde)";
-            plusLink.style.cursor = "not-allowed";
+            plusLink.style.cursor = "default";
+        } else if (amount === 1) {
+            minusLink.style.color = "var(--color-borde)";
+            minusLink.style.cursor = "default";
         }
 
         minusLink.addEventListener("click", (e) => {
@@ -140,7 +143,8 @@ const loadCart = (cart: Record<number, number>) => {
             //la cantidad del carrito no puede ser mayor que el stock
             if (currentAmount < product.stock) {
                 updateCartQuantity(product.id, currentAmount + 1);
-                loadCart(getCart());}
+                loadCart(getCart());
+            }
 
         });
 
