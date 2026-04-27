@@ -162,15 +162,19 @@ const loadProducts = (products: Product[]) => {
 if (inputSearch && searchNotification) { //si no existen no se carga la busqueda, evita errores en cart.html
     inputSearch.addEventListener("input", (e) => {
         const target = e.target as HTMLInputElement;
-        const search = target.value.toLowerCase();
+        const search = target.value.toLowerCase().trim(); //trim para eliminar los espacios al principio y final
 
+        //limita la busqueda a productos con stock > 0
         const searchResults = products.filter((product) => {
-            return product.nombre.toLowerCase().includes(search);
+            return (
+                product.stock > 0 &&
+                product.nombre.toLowerCase().includes(search)
+            );
         });
         loadProducts(searchResults);
 
         //Muestra u oculta el contador de producos encontrados
-        if (search === "") {
+        if (search === "") { //no modifica la busqueda en vacio o un espacio
             searchNotification.style.display = "block";
             //se reinicia el texto del titulo (categorias) a productos.
             productsHeading.textContent = `Productos`
