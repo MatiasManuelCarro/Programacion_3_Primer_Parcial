@@ -6,9 +6,9 @@ export interface Product {
     createdAt: string;
     nombre: string;
     precio: number;
-    descripcion: string
-    stock: number
-    imagen: string
-    disponible: boolean
-    categorias: ICategory[]
+    descripcion: string;
+    stock: number;
+    imagen: string;
+    disponible: boolean;
+    categorias: ICategory[];
 }

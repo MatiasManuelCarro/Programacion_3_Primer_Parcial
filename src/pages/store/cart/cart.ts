@@ -22,7 +22,7 @@ const loadCart = (cart: Record<number, number>) => {
     cartContainer.innerHTML = "";
 
     let total = 0;
-    let subTotal = 0;
+    // let subTotal = 0;
     //obtiene los productos
     const products: Product[] = getProducts();
 
@@ -40,8 +40,13 @@ const loadCart = (cart: Record<number, number>) => {
         const product: Product | undefined = products.find(p => p.id === id);
         if (product === undefined) continue; //si es indefinido salta esta iteracion
 
-        total += product.precio * amount;
-        subTotal += product.precio * amount;
+        // total += product.precio * amount;
+        // subTotal += product.precio * amount;
+
+        //calculo de subtotal y total
+        const subTotal = product.precio * amount;
+        total += subTotal;
+
 
         const productCard: HTMLElement = document.createElement("article");
         productCard.classList.add("cart-products");
@@ -64,7 +69,7 @@ const loadCart = (cart: Record<number, number>) => {
     `;
         cartContainer.appendChild(productCard);
         //reinicia el subtotal
-        subTotal = 0;
+        // subTotal = 0;
 
         //listeners para los botones + y - 
 
@@ -81,23 +86,23 @@ const loadCart = (cart: Record<number, number>) => {
             minusLink.style.cursor = "default";
         }
 
+        //boton -
         minusLink.addEventListener("click", (e) => {
             e.preventDefault();
             //extrae el producto y la cantidad al momento
-            const currentCart = getCart();
-            const currentAmount = currentCart[product.id];
+            const currentAmount = getCart()[product.id];
             //la cantidad no puede ser menor a 1
             if (currentAmount > 1) {
-                updateCartQuantity(product.id, amount - 1);
+                updateCartQuantity(product.id, currentAmount - 1);
                 loadCart(getCart());
             }
         });
 
+        //boton +
         plusLink.addEventListener("click", (e) => {
             e.preventDefault();
             //extrae el producto y la cantidad al momento
-            const currentCart = getCart();
-            const currentAmount = currentCart[product.id];
+            const currentAmount = getCart()[product.id]
             console.log("Debug cantidad", currentAmount, "stock:", product.stock);
 
             //la cantidad del carrito no puede ser mayor que el stock
