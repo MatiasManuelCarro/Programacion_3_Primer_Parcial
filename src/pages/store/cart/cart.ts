@@ -2,17 +2,6 @@ import type { Product } from "../../../types/product";
 import { getCart, clearCart } from "../home/home";
 import { getProducts } from "../../../data/data";
 
-//listener botones + y - 
-
-//botones + y -
-// export const updateCartQuantity = (id: number, newAmount: number) => {
-//     const cart = getCart();
-//     if (newAmount <= 0) {
-//         delete cart[id]; // si llega a 0 se elimina
-//         cart[id] = newAmount;
-//     }
-//     localStorage.setItem("cart", JSON.stringify(cart));
-// };
 
 export const updateCartQuantity = (id: number, newAmount: number) => {
     const cart = getCart();
@@ -27,47 +16,9 @@ export const updateCartQuantity = (id: number, newAmount: number) => {
 };
 
 
-// const loadCart = (cart: Product[]) => {
-//     const cartContainer = document.getElementById("cart-container") as HTMLDivElement;
-//     cartContainer.innerHTML = "";
-
-//     cart.forEach((product) => {
-//         const productCard: HTMLElement = document.createElement("article");
-//         productCard.classList.add("cart-products");
-//         productCard.innerHTML = `
-//         <div class="cart-img">
-//         <img src="/images/${product.imagen}" alt="Imagen de ${product.nombre}" />
-//         </div>
-//         <h3 class="cart-name">${product.nombre}</h3>
-//         <p class="cart-description">${product.descripcion}</p>
-//         <p class="cart-price">Precio: $${product.precio}</p>
-//         <div class="buttons">
-//         </div>
-//     `;
-//         cartContainer.appendChild(productCard);
-//     });
-// };
-
-
-
-
-
-
-// // Al cargar la página, renderizamos el carrito
-// document.addEventListener("DOMContentLoaded", () => {
-//     const cart = getCart();
-//     console.log("Carrito cargado:", cart);
-//     loadCart(cart);
-// });
-
-
-//botones eliminados:
-// <button class="btn-amount minus" data-id="${product.id}">-</button>
-// <p class="cart-amount">Cantidad: ${amount}</p>
-// <button class="btn-amount plus" data-id="${product.id}">+</button>
-
 const loadCart = (cart: Record<number, number>) => {
     const cartContainer = document.getElementById("cart-container") as HTMLDivElement;
+    const cartEmptyMessage = document.getElementById("cart-empty") as HTMLElement;
     cartContainer.innerHTML = "";
 
     let total = 0;
@@ -75,10 +26,19 @@ const loadCart = (cart: Record<number, number>) => {
     //obtiene los productos
     const products: Product[] = getProducts();
 
+    // chequea si cart esta vacio -> muestra el mensaje
+    if (Object.keys(cart).length === 0){
+        console.log("lenght object", Object.keys(cart).length )
+        cartEmptyMessage.style.display = "block"; 
+    } else {
+        //quita el mensaje de carrito vacio
+        cartEmptyMessage.style.display = "none"; 
+    }
+
     for (const [idStr, amount] of Object.entries(cart)) {
         const id = Number(idStr);
         const product: Product | undefined = products.find(p => p.id === id);
-        if (!product) continue;
+        if (product === undefined) continue; //si es indefinido salta esta iteracion
 
         total += product.precio * amount;
         subTotal += product.precio * amount;

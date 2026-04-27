@@ -1,7 +1,5 @@
 import type { Product } from "../../../types/product";
-// import type { ICategory } from "../../../types/category";
 import { getCategories, getProducts } from "../../../data/data";
-// import { addCart } from "../../../utils/utils";
 
 export const getCart = (): Record<number, number> => {
     return JSON.parse(localStorage.getItem("cart") || "{}");
@@ -83,6 +81,7 @@ const cartMessage = document.getElementById("cart-message") as HTMLParagraphElem
 const modalImg = document.getElementById("modal-img") as HTMLDivElement;
 const modal = document.getElementById("modal") as HTMLDivElement;
 const closeCart = document.getElementById("close-cart") as HTMLButtonElement;
+const continueShopping = document.getElementById("btn-continue-shopping") as HTMLButtonElement;
 const productsHeading = document.getElementById("products-heading") as HTMLParagraphElement;
 //busqueda por nombre 
 const inputSearch = document.getElementById("searchProduct") as HTMLInputElement
@@ -226,6 +225,9 @@ if (window.location.pathname.includes("home.html")) {
         });
     });
 
+}
+
+if (window.location.pathname.includes("home.html")) {
     //Evento de click en agregar al carrito (modal)
     productsContainer.addEventListener("click", (event: MouseEvent) => {
         const target = event.target as HTMLElement;
@@ -244,19 +246,26 @@ if (window.location.pathname.includes("home.html")) {
             }
         }
     });
+}
 
-    //funciones que cierran el modal del carrito
-    closeCart.addEventListener("click", (event: MouseEvent) => {
-        event.preventDefault()
+//funciones que cierran el modal del carrito
+
+if (window.location.pathname.includes("home.html")) {
+    const closeModal = (event: MouseEvent) => {
+        event.preventDefault();
         modal.style.display = "none";
         cartMessage.textContent = "";
-    })
+    };
 
-    window.onclick = function (event) {
+
+    closeCart.addEventListener("click", closeModal);
+    continueShopping.addEventListener("click", closeModal);
+
+    window.addEventListener("click", (event) => {
         if (event.target === modal) {
             modal.style.display = "none";
             cartMessage.textContent = "";
         }
-    }
+    });
 
 }
