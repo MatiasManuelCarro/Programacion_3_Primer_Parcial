@@ -121,7 +121,6 @@ const updateCartBadge = () => {
 };
 
 
-
 const productsContainer = document.getElementById("products-container") as HTMLDivElement;
 const cartMessage = document.getElementById("cart-message") as HTMLParagraphElement;
 const modalImg = document.getElementById("modal-img") as HTMLDivElement;
@@ -151,19 +150,15 @@ if (inputSearch && searchNotification) { //si no existen no se carga la busqueda
         });
         loadProducts(searchResults);
 
-        //Muestra u oculta el contador de producos encontrados
-        if (search === "") { //no modifica la busqueda en vacio o un espacio
-            searchNotification.style.display = "block";
-            //se reinicia el texto del titulo (categorias) a productos.
+        if (search === "") { 
+            searchNotification.style.display = "block";            
             productsHeading.textContent = `Productos`
         } else if (searchResults.length > 0) {
             searchNotification.style.display = "block";
-            searchNotification.textContent = `Se encontraron ${searchResults.length} productos`;
-            //se reinicia el texto del titulo (categorias) a productos.
+            searchNotification.textContent = `Se encontraron ${searchResults.length} productos`;            
             productsHeading.textContent = `Productos`
         } else {
-            searchNotification.textContent = "No hay productos con ese nombre";
-            //se reinicia el texto del titulo (categorias) a productos.
+            searchNotification.textContent = "No hay productos con ese nombre";            
             productsHeading.textContent = `Productos`
         }
 
