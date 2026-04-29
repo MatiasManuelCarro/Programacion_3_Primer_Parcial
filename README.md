@@ -15,6 +15,13 @@ El objetivo del proyecto es evolucionar el catálogo de productos trabajado en l
 
 ---
 
+## Link al video del proyecto:
+
+https://youtu.be/8NvW8U4Kt4I
+
+---
+
+
 ## ✨ Funcionalidades Principales
 
 ### 🛒 1. Carrito con persistencia
@@ -135,3 +142,13 @@ pnpm dev
 La aplicación estará disponible en la URL que aparezca en la terminal (generalmente `http://localhost:5173`).
 
 ---
+
+### 4. Build (Demostración de Compilación)
+
+Se incluye para demostrar que el proyecto es capaz de compilar correctamente y generar el paquete de dist listo para producción.
+
+```bash
+pnpm build
+```
+
+Esto generará la carpeta dist/ con los archivos empaquetados.
