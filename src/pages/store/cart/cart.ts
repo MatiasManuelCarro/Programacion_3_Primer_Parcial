@@ -1,22 +1,21 @@
 import type { Product } from "../../../types/product";
-import { getCart, clearCart } from "../home/home";
 import { getProducts } from "../../../data/data";
+import { getCart, clearCart, minusOneCart, addToCart } from "../../../utils/localStorage";
+
+// export const updateCartQuantity = (id: number, newAmount: number) => {
+//     const cart = getCart();
+
+//     if (newAmount <= 0) {
+//         delete cart[id]; //en 0 se elimina 
+//     } else {
+//         cart[id] = newAmount;
+//     }
+
+//     localStorage.setItem("cart", JSON.stringify(cart));
+// };
 
 
-export const updateCartQuantity = (id: number, newAmount: number) => {
-    const cart = getCart();
-
-    if (newAmount <= 0) {
-        delete cart[id]; //en 0 se elimina 
-    } else {
-        cart[id] = newAmount;
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-};
-
-
-const loadCart = (cart: Record<number, number>) => {
+const loadCart = (cart: Record<number, number>) => { //CAMBIAR ACA 
     const cartContainer = document.getElementById("cart-container") as HTMLDivElement;
     const cartEmptyMessage = document.getElementById("cart-empty") as HTMLElement;
     cartContainer.innerHTML = "";
@@ -112,7 +111,8 @@ function cartListeners(productCard: HTMLElement, product: Product, amount: numbe
 function handleMinus(product: Product) {
     const currentAmount = getCart()[product.id];
     if (currentAmount > 1) {
-        updateCartQuantity(product.id, currentAmount - 1);
+        // updateCartQuantity(product.id, currentAmount - 1);
+        minusOneCart(product);
         loadCart(getCart());
     }
 }
@@ -121,7 +121,8 @@ function handlePlus(product: Product) {
     const currentAmount = getCart()[product.id];
     console.log("Debug cantidad", currentAmount, "stock:", product.stock);
     if (currentAmount < product.stock) {
-        updateCartQuantity(product.id, currentAmount + 1);
+        // updateCartQuantity(product.id, currentAmount + 1);
+        addToCart(product);
         loadCart(getCart());
     }
 }

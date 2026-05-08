@@ -1,14 +1,7 @@
 import type { Product } from "../../../types/product";
 import { getCategories, getProducts } from "../../../data/data";
+import { getCart, addToCart, getCartCount } from "../../../utils/localStorage";
 
-export const getCart = (): Record<number, number> => {
-    return JSON.parse(localStorage.getItem("cart") || "{}");
-};
-
-export const clearCart = () => {
-    localStorage.removeItem("cart");
-    console.log("Carrito eliminado de localStorage");
-};
 
 
 //carga las tarjetas de productos
@@ -57,40 +50,40 @@ const loadCategories = () => {
 };
 
 
-const addCart = (p: Product) => {
-    const cart = getCart();
+// const addCart = (p: Product) => {
+//     const cart = getCart();
 
-    let currentAmount: number;
+//     let currentAmount: number;
 
-    // Si el producto ya existe en el carrito
-    if (cart[p.id] !== undefined) {
-        currentAmount = cart[p.id];
-        console.log(`Producto con id=${p.id} ya estaba en el carrito con cantidad=${currentAmount}`);
-    } else {
-        currentAmount = 0;
-        console.log(`Producto con id=${p.id} no estaba en el carrito, inicializando en cantidad=0`);
-    }
+//     // Si el producto ya existe en el carrito
+//     if (cart[p.id] !== undefined) {
+//         currentAmount = cart[p.id];
+//         console.log(`Producto con id=${p.id} ya estaba en el carrito con cantidad=${currentAmount}`);
+//     } else {
+//         currentAmount = 0;
+//         console.log(`Producto con id=${p.id} no estaba en el carrito, inicializando en cantidad=0`);
+//     }
 
-    // Actualizamos la cantidad sumando 1
-    cart[p.id] = currentAmount + 1;
-    console.log(`DEBUG: Producto con id=${p.id} actualizado a cantidad=${cart[p.id]}`);
+//     // Actualizamos la cantidad sumando 1
+//     cart[p.id] = currentAmount + 1;
+//     console.log(`DEBUG: Producto con id=${p.id} actualizado a cantidad=${cart[p.id]}`);
 
-    // Guardamos en localStorage
-    localStorage.setItem("cart", JSON.stringify(cart));
-    console.log("DEBUG: Carrito guardado en localStorage:", cart);
-};
+//     // Guardamos en localStorage
+//     localStorage.setItem("cart", JSON.stringify(cart));
+//     console.log("DEBUG: Carrito guardado en localStorage:", cart);
+// };
 
 //cantidad de elementos en el carrito
-export const getCartCount = (): number => {
-    const cart = getCart();
-    let count = 0;
+// export const getCartCount = (): number => {
+//     const cart = getCart();
+//     let count = 0;
 
-    for (const amount of Object.values(cart)) {
-        count += amount;
-    }
+//     for (const amount of Object.values(cart)) {
+//         count += amount;
+//     }
 
-    return count;
-};
+//     return count;
+// };
 
 //bagde de cantidad de items en el carrito
 const updateCartBadge = () => {
@@ -150,15 +143,15 @@ if (inputSearch && searchNotification) { //si no existen no se carga la busqueda
         });
         loadProducts(searchResults);
 
-        if (search === "") { 
-            searchNotification.style.display = "block";            
+        if (search === "") {
+            searchNotification.style.display = "block";
             productsHeading.textContent = `Productos`
         } else if (searchResults.length > 0) {
             searchNotification.style.display = "block";
-            searchNotification.textContent = `Se encontraron ${searchResults.length} productos`;            
+            searchNotification.textContent = `Se encontraron ${searchResults.length} productos`;
             productsHeading.textContent = `Productos`
         } else {
-            searchNotification.textContent = "No hay productos con ese nombre";            
+            searchNotification.textContent = "No hay productos con ese nombre";
             productsHeading.textContent = `Productos`
         }
 
@@ -167,7 +160,7 @@ if (inputSearch && searchNotification) { //si no existen no se carga la busqueda
 
 document.addEventListener("DOMContentLoaded", () => {
 
-        // Cargar productos
+    // Cargar productos
     if (productsContainer) {
         loadProducts(products);
         updateCartBadge();
@@ -210,20 +203,19 @@ document.addEventListener("DOMContentLoaded", () => {
         //Evento de click en agregar al carrito (modal)
         productsContainer.addEventListener("click", (event: MouseEvent) => {
             const target = event.target as HTMLElement;
-            if (target && target.classList.contains("btn-cart")) {
-                const idProduct = target.dataset.id;;
-                const product = products.find((p) => p.id === Number(idProduct));
+            const idProduct = target.dataset.id;;
+            const product = products.find((p) => p.id === Number(idProduct));
 
-                if (product) {
-                    modalImg.innerHTML = `<img src="/images/${product.imagen}" alt="Imagen de ${product.nombre}"/>`
-                    cartMessage.textContent = `Se agrega al carrito: ${product.nombre}`;
-                    modal.style.display = "block";
-                    //agrega al carrito
-                    addCart(product);
-                    //actualiza el badge del cart
-                    updateCartBadge();
-                }
+            if (product) {
+                modalImg.innerHTML = `<img src="/images/${product.imagen}" alt="Imagen de ${product.nombre}"/>`
+                cartMessage.textContent = `Se agrega al carrito: ${product.nombre}`;
+                modal.style.display = "block";
+                //agrega al carrito
+                addToCart(product);
+                //actualiza el badge del cart
+                updateCartBadge();
             }
+
         });
 
 
