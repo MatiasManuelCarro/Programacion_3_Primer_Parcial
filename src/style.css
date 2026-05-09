@@ -571,11 +571,25 @@ main {
     margin: 0;
 }
 
-/* mensaje de carrito vacio */
-#cart-empty{
-    /* Desactivado por defecto */
+/* mensaje de carrito vacio - cantidad de productos total*/
+#cart-message{
     padding-left: 3rem;
     display: none; 
+    padding-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.cart-count{
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+    font-weight: bold;
+    border-radius: var(--border-radius);
+    width: 1.5rem;
+    height: 1rem;
+    font-size: 1.2rem;
+    margin-left: 0.3rem;
+    margin-bottom: 0.3rem;
+    padding: 0.5rem;
 }
 
 /* Cada producto */

@@ -1,6 +1,6 @@
 import type { Product } from "../../../types/product";
 import { getProducts } from "../../../data/data";
-import { getCart, clearCart, minusOneCart, addToCart } from "../../../utils/localStorage";
+import { getCart, clearCart, minusOneCart, addToCart, deleteProduct, getCartCount } from "../../../utils/localStorage";
 
 // export const updateCartQuantity = (id: number, newAmount: number) => {
 //     const cart = getCart();
@@ -15,32 +15,33 @@ import { getCart, clearCart, minusOneCart, addToCart } from "../../../utils/loca
 // };
 
 
-const loadCart = (cart: Record<number, number>) => { //CAMBIAR ACA 
+const loadCart = () => {
     const cartContainer = document.getElementById("cart-container") as HTMLDivElement;
-    const cartEmptyMessage = document.getElementById("cart-empty") as HTMLElement;
+    const cartEmptyMessage = document.getElementById("cart-message") as HTMLElement;
     cartContainer.innerHTML = "";
 
     let total = 0;
-    //obtiene los productos
-    const products: Product[] = getProducts();
+    //obtiene el cart
+    const cart = getCart();
 
     // chequea si cart esta vacio -> muestra el mensaje
     if (Object.keys(cart).length === 0) {
-        console.log("lenght del object", Object.keys(cart).length)
+        cartEmptyMessage.innerHTML = "No hay ningun producto en el carrito."
         cartEmptyMessage.style.display = "block";
     } else {
-        cartEmptyMessage.style.display = "none";
+        cartEmptyMessage.innerHTML = `Total de productos en el carrito: <span class="cart-count">${getCartCount()}</span>`
+        cartEmptyMessage.style.display = "block";
     }
 
-    for (const [idStr, amount] of Object.entries(cart)) {
-        const id = Number(idStr);
-        const product: Product | undefined = products.find(p => p.id === id);
-        if (product === undefined) continue; //si es indefinido salta esta iteracion
-
+    for (const item of cart) {
+        const product = item.product; //extrae el producto
+        const amount = item.quantity; //extrae la cantidad
 
         //calculo de subtotal y total
         const subTotal = product.precio * amount;
         total += subTotal;
+
+        if (!product) continue;
 
         //renderizado del producto
         const productCard: HTMLElement = document.createElement("article");
@@ -94,54 +95,34 @@ function cartListeners(productCard: HTMLElement, product: Product, amount: numbe
     // Listeners
     minusLink.addEventListener("click", (e) => {
         e.preventDefault();
-        handleMinus(product);
+        if (amount > 1) { //desactiva la funcion del boton si es 1
+            minusOneCart(product);
+            loadCart();
+        }
     });
 
     plusLink.addEventListener("click", (e) => {
         e.preventDefault();
-        handlePlus(product);
+        if (amount < product.stock) { //desactiva la funcion del boton si ya alcanzo el limite de stock
+            addToCart(product);
+            loadCart();
+        }
     });
 
     deleteBtn.addEventListener("click", () => {
-        handleDelete(product);
+        deleteProduct(product);
+        loadCart();
     });
-}
 
-//handlers de botones
-function handleMinus(product: Product) {
-    const currentAmount = getCart()[product.id];
-    if (currentAmount > 1) {
-        // updateCartQuantity(product.id, currentAmount - 1);
-        minusOneCart(product);
-        loadCart(getCart());
-    }
 }
-
-function handlePlus(product: Product) {
-    const currentAmount = getCart()[product.id];
-    console.log("Debug cantidad", currentAmount, "stock:", product.stock);
-    if (currentAmount < product.stock) {
-        // updateCartQuantity(product.id, currentAmount + 1);
-        addToCart(product);
-        loadCart(getCart());
-    }
-}
-
-function handleDelete(product: Product) {
-    updateCartQuantity(product.id, 0);
-    loadCart(getCart());
-}
-
 
 document.addEventListener("DOMContentLoaded", () => {
-    const cart = getCart();
-    console.log("Carrito cargado:", cart);
-    loadCart(cart);
+    loadCart();
 });
 
 
 document.getElementById("clear-cart")?.addEventListener("click", () => {
-    clearCart();            
-    loadCart(getCart());    
+    clearCart();
+    loadCart();
 });
 
