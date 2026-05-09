@@ -165,77 +165,76 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCartBadge();
     }
     //verifica que se encuentre dentro de home.html, si no no llama la funcion de modal, evita errores en cart.html
-    if (location.pathname.endsWith("home.html")) {
+    loadCategories();
+    //Filtrar por categorias
+    const btnCategories = document.querySelectorAll<HTMLLIElement>(".categories");
 
-        loadCategories();
-        //Filtrar por categorias
-        const btnCategories = document.querySelectorAll<HTMLLIElement>(".categories");
+    btnCategories.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            //limpia el input de busqueda de texto primero
+            inputSearch.value = "";
+            const selectedCategory = btn.textContent?.trim();
+            if (selectedCategory === "Ver todas las Categorias") {
+                loadProducts(products);
+                productsHeading.textContent = `Productos`
+            } else {
+                //busca categoria por nombre
+                const findCategory = categories.find(
+                    (category) => category.nombre.toLowerCase() === selectedCategory?.toLowerCase()
+                );
 
-        btnCategories.forEach((btn) => {
-            btn.addEventListener("click", () => {
-                //limpia el input de busqueda de texto primero
-                inputSearch.value = "";
-                const selectedCategory = btn.textContent?.trim();
-                if (selectedCategory === "Ver todas las Categorias") {
-                    loadProducts(products);
-                    productsHeading.textContent = `Productos`
-                } else {
-                    //busca categoria por nombre
-                    const findCategory = categories.find(
-                        (category) => category.nombre.toLowerCase() === selectedCategory?.toLowerCase()
-                    );
+                // Filtrar los productos por categoria
+                const filterProduct = products.filter((product) =>
+                    product.categorias.some((c) => c.id === findCategory?.id)
+                );
 
-                    console.log("Categoria clickeada", findCategory)
-                    // Filtrar los prodcutos por categoria
-                    const filterProduct = products.filter((product) =>
-                        product.categorias.some((c) => c.id === findCategory?.id)
-                    );
-
-                    loadProducts(filterProduct);
-                    productsHeading.textContent = `Categoria: ${selectedCategory}`
-                }
-
-            });
-        });
-
-
-        //Evento de click en agregar al carrito (modal)
-        productsContainer.addEventListener("click", (event: MouseEvent) => {
-            const target = event.target as HTMLElement;
-            const idProduct = target.dataset.id;;
-            const product = products.find((p) => p.id === Number(idProduct));
-
-            if (product) {
-                modalImg.innerHTML = `<img src="/images/${product.imagen}" alt="Imagen de ${product.nombre}"/>`
-                cartMessage.textContent = `Se agrega al carrito: ${product.nombre}`;
-                modal.style.display = "block";
-                //agrega al carrito
-                addToCart(product);
-                //actualiza el badge del cart
-                updateCartBadge();
+                loadProducts(filterProduct);
+                productsHeading.textContent = `Categoria: ${selectedCategory}`
             }
-
+        //asigna el id activo al boton clickeado
+        btnCategories.forEach((b) => b.removeAttribute("id"));
+        btn.id = "category-active"; 
         });
+    });
 
 
-        //funciones que cierran el modal del carrito
+    //Evento de click en agregar al carrito (modal)
+    productsContainer.addEventListener("click", (event: MouseEvent) => {
+        const target = event.target as HTMLElement;
+        const idProduct = target.dataset.id;;
+        const product = products.find((p) => p.id === Number(idProduct));
 
-        const closeModal = (event: MouseEvent) => {
-            event.preventDefault();
+        if (product) {
+            modalImg.innerHTML = `<img src="/images/${product.imagen}" alt="Imagen de ${product.nombre}"/>`
+            cartMessage.textContent = `Se agrega al carrito: ${product.nombre}`;
+            modal.style.display = "block";
+            //agrega al carrito
+            addToCart(product);
+            //actualiza el badge del cart
+            updateCartBadge();
+        }
+
+    });
+
+
+    //funciones que cierran el modal del carrito
+
+    const closeModal = (event: MouseEvent) => {
+        event.preventDefault();
+        modal.style.display = "none";
+        cartMessage.textContent = "";
+    };
+
+
+    closeCart.addEventListener("click", closeModal);
+    continueShopping.addEventListener("click", closeModal);
+
+    window.addEventListener("click", (event) => {
+        if (event.target === modal) {
             modal.style.display = "none";
             cartMessage.textContent = "";
-        };
+        }
+    });
 
 
-        closeCart.addEventListener("click", closeModal);
-        continueShopping.addEventListener("click", closeModal);
-
-        window.addEventListener("click", (event) => {
-            if (event.target === modal) {
-                modal.style.display = "none";
-                cartMessage.textContent = "";
-            }
-        });
-
-    }
 });
