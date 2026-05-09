@@ -4,20 +4,23 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/src/style.css">
+    <link rel="stylesheet" href="/src/shared.css">
+    <link rel="stylesheet" href="/src/home.css">
     <title>Food Store</title>
 </head>
 
 <body>
     <header class="site-header">
         <a href="/index.html" class="site-header__brand">
+            <button id="menu-toggle" class="sidebar-toggle">&#9776;</button>
             <h1>&#127828; Food Store</h1>
         </a>
         <nav class="site-nav">
             <ul class="site-nav__list">
                 <li class="site-nav__item"><a class="site-nav__link" href="/index.html">Catalogo</a></li>
                 <!-- <li class="site-nav__item"><a class="site-nav__link" href="#">My Orders</a></li> -->
-                <li class="site-nav__item"><a class="site-nav__link" href="/src/pages/store/cart/cart.html">Carrito <span id="cart-count" class="cart-badge"></span></a></li>
+                <li class="site-nav__item"><a class="site-nav__link" href="/src/pages/store/cart/cart.html">Carrito
+                        <span id="cart-count" class="cart-badge"></span></a></li>
                 <!-- <li class="site-nav__item"><a class="site-nav__link" href="#">Admin Panel</a></li> -->
                 <!-- <li class="site-nav__item" id="login-button"><a class="site-nav__link" href="#">Login</a></li> -->
             </ul>
@@ -35,7 +38,7 @@
     <main class="main">
         <form id="searchForm" class="search">
             <label class="search__label" for="searchProduct">Buscar Productos</label>
-            <input id="searchProduct" class="search__input" type="text" placeholder="  Buscar..." />
+            <input id="searchProduct" class="search__input" type="text" placeholder="Buscar..." />
             <p id="searchNotification" class="search__notification"></p>
         </form>
         <!-- Seccion de productos  -->
@@ -52,12 +55,15 @@
         <div id="modal-cart" class="modal-window">
             <h2 class="modal-window__title">Carrito de Compras</h2>
             <div class="modal-content-div">
-            <div id="modal-img" class="cart-img"></div>
-            <p id="cart-message" class="modal-window__message"></p></div>
+                <!-- <div id="modal-img" class="cart-img"></div>
+            <p id="cart-message" class="modal-window__message"></p></div> -->
+                <div id="modal-img" class="modal-img"></div>
+                <p id="modal-message" class="modal-window__message"></p>
+            </div>
             <button class="modal-cart__close close" id="close-cart">&times;</button>
             <div class="modal-buttons">
-            <a href="/src/pages/store/cart/cart.html" class="btn-cart-link">Ir al Carrito</a>
-            <a href="" class="btn-cart-link" id="btn-continue-shopping">Continuar comprando</a>
+                <a href="/src/pages/store/cart/cart.html" class="btn-cart-link">Ir al Carrito</a>
+                <a href="" class="btn-cart-link" id="btn-continue-shopping">Continuar comprando</a>
             </div>
         </div>
     </div>

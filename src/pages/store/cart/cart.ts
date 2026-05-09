@@ -1,6 +1,6 @@
 import type { Product } from "../../../types/product";
 import type { CartItem } from "../../../types/cartItem";
-import { getProducts } from "../../../data/data";
+
 import {
     getCart,
     clearCart,
@@ -10,17 +10,7 @@ import {
     getCartCount,
 } from "../../../utils/localStorage";
 
-// export const updateCartQuantity = (id: number, newAmount: number) => {
-//     const cart = getCart();
 
-//     if (newAmount <= 0) {
-//         delete cart[id]; //en 0 se elimina
-//     } else {
-//         cart[id] = newAmount;
-//     }
-
-//     localStorage.setItem("cart", JSON.stringify(cart));
-// };
 
 export const loadCart = () => {
     const cartContainer = document.getElementById(
@@ -89,67 +79,7 @@ function updateCartSummary(total: number) {
     }
 }
 
-// const loadCart = () => {
-//     const cartContainer = document.getElementById("cart-container") as HTMLDivElement;
-//     const cartMessage = document.getElementById("cart-message") as HTMLElement;
-//     cartContainer.innerHTML = "";
 
-//     let total = 0;
-//     //obtiene el cart
-//     const cart = getCart();
-
-//     // chequea si cart esta vacio -> muestra el mensaje
-//     if (Object.keys(cart).length === 0) {
-//         cartMessage.innerHTML = "No hay ningun producto en el carrito."
-//         cartMessage.style.display = "block";
-//     } else {
-//         cartMessage.innerHTML = `Total de productos en el carrito: <span class="cart-count">${getCartCount()}</span>`
-//         cartMessage.style.display = "block";
-//     }
-
-//     for (const item of cart) {
-//         const product = item.product; //extrae el producto
-//         const amount = item.quantity; //extrae la cantidad
-
-//         //calculo de subtotal y total
-//         const subTotal = product.precio * amount;
-//         total += subTotal;
-
-//         if (!product) continue;
-
-//         //renderizado del producto
-//         const productCard: HTMLElement = document.createElement("article");
-//         productCard.classList.add("cart-products");
-//         productCard.innerHTML = `
-//         <div class="cart-img">
-//         <img src="/images/${product.imagen}" alt="Imagen de ${product.nombre}" />
-//         </div>
-//         <h3 class="cart-name">${product.nombre}</h3>
-//         <p class="cart-description">${product.descripcion}</p>
-//         <p class="cart-price">Precio: $${product.precio}</p>
-//         <p class="cart-amount">
-//         <a href="#" class="link-amount minus" data-id="${product.id}">-</a>
-//         Cantidad: ${amount}
-//         <a href="#" class="link-amount plus" data-id="${product.id}">+</a>
-//         </p>
-//         <p class="cart-subtotal">Subtotal: $${subTotal}</p>
-//         <div class="buttons">
-//         <button class="btn-cart delete" data-id="${product.id}">Eliminar</button>
-//         </div>
-//     `;
-//         cartContainer.appendChild(productCard);
-
-//         //carga los listeners de botones
-//         cartListeners(productCard, product, amount);
-//     }
-
-//     // Actualizar el total
-//     const summary = document.querySelector(".cart-summary h3");
-//     if (summary) {
-//         summary.textContent = `Total: $${total}`;
-//     }
-
-// };
 
 function cartListeners(
     productCard: HTMLElement,

@@ -9,29 +9,15 @@ export const getCart = (): CartItem[] => {
     return cart ? JSON.parse(cart) as CartItem[] : [];
 };
 
-// export const getCartCount = (product: Product): number => {
-//     const cart = getCart();
-//     const amount = cart.find(p => p.product.id === product.id)
-//     if (amount && amount.quantity >= 1){
-//         return amount.quantity
-//     } else {
-//         return 0; //si existe en el carrito devuelve 0
-//     }
-// }
-
 
 export const getCartCount = (): number => {
-    const cart = getCart();
-    let count = 0;
+    return getCart().reduce(
+        (count: number, item: CartItem) => count + item.quantity, 
+        0
+    );
+};
 
-    for (const item of cart) {
-        count += item.quantity;
-    }
-
-    return count;
-}
-
-export const addToCart = (product: Product): void => { //deberia no necesitar ningun parametro 
+export const addToCart = (product: Product): void => {
     const cart = getCart();
     const exists = cart.find(p => p.product.id === product.id)
 
@@ -68,7 +54,6 @@ const saveCart = (cart: CartItem[]): void => {
     localStorage.setItem("cart", JSON.stringify(cart));
 };
 
-export const clearCart = () => {
+export const clearCart = (): void => {
     localStorage.removeItem("cart");
-    console.log("Carrito eliminado de localStorage");
 };

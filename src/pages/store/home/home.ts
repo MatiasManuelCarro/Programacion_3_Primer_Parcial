@@ -1,32 +1,32 @@
 import type { Product } from "../../../types/product";
 import { getCategories, getProducts } from "../../../data/data";
-import { getCart, addToCart, getCartCount } from "../../../utils/localStorage";
+import { addToCart, getCartCount } from "../../../utils/localStorage";
 
 
-
+const searchNotification = document.getElementById("searchNotification") as HTMLElement;
 //carga las tarjetas de productos
-const loadProducts = (products: Product[]) => {
+const loadProducts = (product: Product[]) => {
     const productsContainer = document.getElementById("products-container") as HTMLDivElement;
     productsContainer.innerHTML = "";
 
     //contador de productos disponibles
     let productsAvailable = 0;
 
-    products.forEach((products) => {
+    product.forEach((product) => {
         //verifica que el stock sea mayor a 0
-        if (products.stock > 0) {
+        if (product.stock > 0) {
             productsAvailable += 1;
             const productsCard: HTMLElement = document.createElement("div");
             productsCard.classList.add("featured-products");
             productsCard.innerHTML = `
         <div class="featured-img">
-        <img src="/images/${products.imagen}" alt="Imagen de ${products.nombre}" /></div>
-        <p class=product-category>${products.categorias.map(c => c.nombre)}</p>
-        <h3 class=product-name>${products.nombre}</h3>
-        <p class=product-description>${products.descripcion}</p>
-        <p class=product-price>Precio: $${products.precio}</p>
+        <img src="/images/${product.imagen}" alt="Imagen de ${product.nombre}" /></div>
+        <p class=product-category>${product.categorias.map(c => c.nombre)}</p>
+        <h3 class=product-name>${product.nombre}</h3>
+        <p class=product-description>${product.descripcion}</p>
+        <p class=product-price>Precio: $${product.precio}</p>
         <div class="buttons">
-        <button class=btn-cart data-id="${products.id}">Agregar al Carrito</button></div>
+        <button class=btn-cart data-id="${product.id}">Agregar al Carrito</button></div>
         `
             productsContainer.appendChild(productsCard);
         }
@@ -49,41 +49,6 @@ const loadCategories = () => {
     })
 };
 
-
-// const addCart = (p: Product) => {
-//     const cart = getCart();
-
-//     let currentAmount: number;
-
-//     // Si el producto ya existe en el carrito
-//     if (cart[p.id] !== undefined) {
-//         currentAmount = cart[p.id];
-//         console.log(`Producto con id=${p.id} ya estaba en el carrito con cantidad=${currentAmount}`);
-//     } else {
-//         currentAmount = 0;
-//         console.log(`Producto con id=${p.id} no estaba en el carrito, inicializando en cantidad=0`);
-//     }
-
-//     // Actualizamos la cantidad sumando 1
-//     cart[p.id] = currentAmount + 1;
-//     console.log(`DEBUG: Producto con id=${p.id} actualizado a cantidad=${cart[p.id]}`);
-
-//     // Guardamos en localStorage
-//     localStorage.setItem("cart", JSON.stringify(cart));
-//     console.log("DEBUG: Carrito guardado en localStorage:", cart);
-// };
-
-//cantidad de elementos en el carrito
-// export const getCartCount = (): number => {
-//     const cart = getCart();
-//     let count = 0;
-
-//     for (const amount of Object.values(cart)) {
-//         count += amount;
-//     }
-
-//     return count;
-// };
 
 //bagde de cantidad de items en el carrito
 const updateCartBadge = () => {
@@ -113,9 +78,9 @@ const updateCartBadge = () => {
     }
 };
 
-
+document.addEventListener("DOMContentLoaded", () => {
 const productsContainer = document.getElementById("products-container") as HTMLDivElement;
-const cartMessage = document.getElementById("cart-message") as HTMLParagraphElement;
+const cartMessage = document.getElementById("modal-message") as HTMLParagraphElement;
 const modalImg = document.getElementById("modal-img") as HTMLDivElement;
 const modal = document.getElementById("modal") as HTMLDivElement;
 const closeCart = document.getElementById("close-cart") as HTMLButtonElement;
@@ -123,7 +88,6 @@ const continueShopping = document.getElementById("btn-continue-shopping") as HTM
 const productsHeading = document.getElementById("products-heading") as HTMLElement;
 //busqueda por nombre 
 const inputSearch = document.getElementById("searchProduct") as HTMLInputElement
-const searchNotification = document.getElementById("searchNotification") as HTMLElement;
 
 const products = getProducts();
 const categories = getCategories();
@@ -144,20 +108,20 @@ inputSearch.addEventListener("input", (e) => {
 
     if (search === "") {
         searchNotification.style.display = "block";
+        // revisar
+        searchNotification.textContent = "Ingrese un nombre para buscar"; 
         productsHeading.textContent = `Productos`
     } else if (searchResults.length > 0) {
         searchNotification.style.display = "block";
         searchNotification.textContent = `Se encontraron ${searchResults.length} productos`;
         productsHeading.textContent = `Productos`
     } else {
+        searchNotification.style.display = "block";
         searchNotification.textContent = "No hay productos con ese nombre";
         productsHeading.textContent = `Productos`
     }
 
 });
-
-
-document.addEventListener("DOMContentLoaded", () => {
 
     // Cargar productos
     if (productsContainer) {
@@ -235,6 +199,5 @@ document.addEventListener("DOMContentLoaded", () => {
             cartMessage.textContent = "";
         }
     });
-
 
 });
