@@ -129,34 +129,33 @@ const products = getProducts();
 const categories = getCategories();
 
 
-if (inputSearch && searchNotification) { //si no existen no se carga la busqueda, evita errores en cart.html
-    inputSearch.addEventListener("input", (e) => {
-        const target = e.target as HTMLInputElement;
-        const search = target.value.toLowerCase().trim(); //trim para eliminar los espacios al principio y final
+inputSearch.addEventListener("input", (e) => {
+    const target = e.target as HTMLInputElement;
+    const search = target.value.toLowerCase().trim(); //trim para eliminar los espacios al principio y final
 
-        //limita la busqueda a productos con stock > 0
-        const searchResults = products.filter((product) => {
-            return (
-                product.stock > 0 &&
-                product.nombre.toLowerCase().includes(search)
-            );
-        });
-        loadProducts(searchResults);
-
-        if (search === "") {
-            searchNotification.style.display = "block";
-            productsHeading.textContent = `Productos`
-        } else if (searchResults.length > 0) {
-            searchNotification.style.display = "block";
-            searchNotification.textContent = `Se encontraron ${searchResults.length} productos`;
-            productsHeading.textContent = `Productos`
-        } else {
-            searchNotification.textContent = "No hay productos con ese nombre";
-            productsHeading.textContent = `Productos`
-        }
-
+    //limita la busqueda a productos con stock > 0
+    const searchResults = products.filter((product) => {
+        return (
+            product.stock > 0 &&
+            product.nombre.toLowerCase().includes(search)
+        );
     });
-}
+    loadProducts(searchResults);
+
+    if (search === "") {
+        searchNotification.style.display = "block";
+        productsHeading.textContent = `Productos`
+    } else if (searchResults.length > 0) {
+        searchNotification.style.display = "block";
+        searchNotification.textContent = `Se encontraron ${searchResults.length} productos`;
+        productsHeading.textContent = `Productos`
+    } else {
+        searchNotification.textContent = "No hay productos con ese nombre";
+        productsHeading.textContent = `Productos`
+    }
+
+});
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
