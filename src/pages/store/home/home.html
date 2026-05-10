@@ -11,8 +11,8 @@
 
 <body>
     <header class="site-header">
+        <button id="menu-toggle" class="sidebar-toggle">&#9776;</button>
         <a href="/index.html" class="site-header__brand">
-            <button id="menu-toggle" class="sidebar-toggle">&#9776;</button>
             <h1>&#127828; Food Store</h1>
         </a>
         <nav class="site-nav">
@@ -27,6 +27,7 @@
         </nav>
     </header>
     <hr class="divider" />
+    <div id="overlay"></div>
     <aside class="sidebar">
         <h2 class="categories__heading">Categorias</h2>
         <ul id="categories-list" class="sidebar__list">
@@ -68,7 +69,9 @@
         </div>
     </div>
 
+
     <script type="module" src="/src/pages/store/home/home.ts"></script>
 </body>
+
 
 </html>

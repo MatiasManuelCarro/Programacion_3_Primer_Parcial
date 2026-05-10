@@ -79,49 +79,53 @@ const updateCartBadge = () => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-const productsContainer = document.getElementById("products-container") as HTMLDivElement;
-const cartMessage = document.getElementById("modal-message") as HTMLParagraphElement;
-const modalImg = document.getElementById("modal-img") as HTMLDivElement;
-const modal = document.getElementById("modal") as HTMLDivElement;
-const closeCart = document.getElementById("close-cart") as HTMLButtonElement;
-const continueShopping = document.getElementById("btn-continue-shopping") as HTMLButtonElement;
-const productsHeading = document.getElementById("products-heading") as HTMLElement;
-//busqueda por nombre 
-const inputSearch = document.getElementById("searchProduct") as HTMLInputElement
+    const productsContainer = document.getElementById("products-container") as HTMLDivElement;
+    const cartMessage = document.getElementById("modal-message") as HTMLParagraphElement;
+    const modalImg = document.getElementById("modal-img") as HTMLDivElement;
+    const modal = document.getElementById("modal") as HTMLDivElement;
+    const closeCart = document.getElementById("close-cart") as HTMLButtonElement;
+    const continueShopping = document.getElementById("btn-continue-shopping") as HTMLButtonElement;
+    const productsHeading = document.getElementById("products-heading") as HTMLElement;
+    //busqueda por nombre 
+    const inputSearch = document.getElementById("searchProduct") as HTMLInputElement
+    //para sidebar en mobile
+    const toggleSidebar = document.getElementById("menu-toggle") as HTMLButtonElement;
+    const sidebar = document.querySelector(".sidebar") as HTMLElement;
+    const overlay = document.getElementById("overlay") as HTMLDivElement;
 
-const products = getProducts();
-const categories = getCategories();
+    const products = getProducts();
+    const categories = getCategories();
 
 
-inputSearch.addEventListener("input", (e) => {
-    const target = e.target as HTMLInputElement;
-    const search = target.value.toLowerCase().trim(); //trim para eliminar los espacios al principio y final
+    inputSearch.addEventListener("input", (e) => {
+        const target = e.target as HTMLInputElement;
+        const search = target.value.toLowerCase().trim(); //trim para eliminar los espacios al principio y final
 
-    //limita la busqueda a productos con stock > 0
-    const searchResults = products.filter((product) => {
-        return (
-            product.stock > 0 &&
-            product.nombre.toLowerCase().includes(search)
-        );
+        //limita la busqueda a productos con stock > 0
+        const searchResults = products.filter((product) => {
+            return (
+                product.stock > 0 &&
+                product.nombre.toLowerCase().includes(search)
+            );
+        });
+        loadProducts(searchResults);
+
+        if (search === "") {
+            searchNotification.style.display = "block";
+            // revisar
+            searchNotification.textContent = "Ingrese un nombre para buscar";
+            productsHeading.textContent = `Productos`
+        } else if (searchResults.length > 0) {
+            searchNotification.style.display = "block";
+            searchNotification.textContent = `Se encontraron ${searchResults.length} productos`;
+            productsHeading.textContent = `Productos`
+        } else {
+            searchNotification.style.display = "block";
+            searchNotification.textContent = "No hay productos con ese nombre";
+            productsHeading.textContent = `Productos`
+        }
+
     });
-    loadProducts(searchResults);
-
-    if (search === "") {
-        searchNotification.style.display = "block";
-        // revisar
-        searchNotification.textContent = "Ingrese un nombre para buscar"; 
-        productsHeading.textContent = `Productos`
-    } else if (searchResults.length > 0) {
-        searchNotification.style.display = "block";
-        searchNotification.textContent = `Se encontraron ${searchResults.length} productos`;
-        productsHeading.textContent = `Productos`
-    } else {
-        searchNotification.style.display = "block";
-        searchNotification.textContent = "No hay productos con ese nombre";
-        productsHeading.textContent = `Productos`
-    }
-
-});
 
     // Cargar productos
     if (productsContainer) {
@@ -155,9 +159,9 @@ inputSearch.addEventListener("input", (e) => {
                 loadProducts(filterProduct);
                 productsHeading.textContent = `Categoria: ${selectedCategory}`
             }
-        //asigna el id activo al boton clickeado
-        btnCategories.forEach((b) => b.removeAttribute("id"));
-        btn.id = "category-active"; 
+            //asigna el id activo al boton clickeado
+            btnCategories.forEach((b) => b.removeAttribute("id"));
+            btn.id = "category-active";
         });
     });
 
@@ -198,6 +202,16 @@ inputSearch.addEventListener("input", (e) => {
             modal.style.display = "none";
             cartMessage.textContent = "";
         }
+    });
+
+    toggleSidebar.addEventListener("click", () => {
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+    });
+
+    overlay.addEventListener("click", () => {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
     });
 
 });

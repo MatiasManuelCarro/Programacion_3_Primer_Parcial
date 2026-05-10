@@ -138,3 +138,16 @@ document.getElementById("clear-cart")?.addEventListener("click", () => {
     clearCart();
     loadCart();
 });
+
+document.addEventListener("DOMContentLoaded", () =>{
+        const toggleSidebar = document.getElementById("menu-toggle") as HTMLButtonElement;
+    const sidebar = document.querySelector(".sidebar") as HTMLElement;
+        //toggle de sidebar
+    if (toggleSidebar && sidebar) {
+        toggleSidebar.addEventListener("click", () => {
+            sidebar.classList.toggle("active");
+        });
+    }
+
+});
+
