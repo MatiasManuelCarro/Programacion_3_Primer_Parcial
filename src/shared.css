@@ -326,6 +326,8 @@ main {
     pointer-events: auto;
 }
 
+
+
 /* Mostrar en pantallas chicas */
 @media (max-width: 768px) {
     #menu-toggle {
